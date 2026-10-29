@@ -27,7 +27,7 @@ PEOPLE = list(P.values())
 def musiker(lang):
     de = lang == "de"
     return {
-     "slug": f"01_reichste_musiker_{lang}", "lang": lang, "vmax": 2.8, "people": PEOPLE,
+     "slug": "01_richest_musicians" if lang == "en" else "01_reichste_musiker_de", "lang": lang, "vmax": 2.8, "people": PEOPLE,
      "brand": "WER HAT MEHR?" if de else "WHO HAS MORE?",
      "source": {"de": "Forbes Billionaires 2026 (März 2026), Schätzungen", "en": "Forbes Billionaires 2026 (March 2026), estimates"},
      "scenes": [
@@ -48,7 +48,8 @@ def musiker(lang):
        "btn": {"de": "Folgen für mehr Vergleiche", "en": "Follow for more rankings"}},
      ]}
 
-VIDEOS = [musiker("de"), musiker("en")]
+# Account "Who has more?" läuft nur auf Englisch
+VIDEOS = [musiker("en")]
 def run(i): return pv.render(VIDEOS[i], OUT)
 if __name__ == "__main__":
     with Pool(2) as p:
