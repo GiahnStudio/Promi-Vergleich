@@ -39,6 +39,26 @@ def flag(img, x, y, code, w=96):
         d.line([0, 0, w, h], fill=(200, 16, 46), width=4); d.line([0, h, w, 0], fill=(200, 16, 46), width=4)
         d.rectangle([w / 2 - 9, 0, w / 2 + 9, h], fill=(255, 255, 255)); d.rectangle([0, h / 2 - 9, w, h / 2 + 9], fill=(255, 255, 255))
         d.rectangle([w / 2 - 5, 0, w / 2 + 5, h], fill=(200, 16, 46)); d.rectangle([0, h / 2 - 5, w, h / 2 + 5], fill=(200, 16, 46))
+    elif code == "PT":
+        d.rectangle([0, 0, w * 0.4, h], fill=(0, 102, 0)); d.rectangle([w * 0.4, 0, w, h], fill=(255, 0, 0))
+        d.ellipse([w * 0.4 - h * 0.2, h * 0.3, w * 0.4 + h * 0.2, h * 0.7], fill=(255, 220, 0))
+    elif code == "MX":
+        for i, c in enumerate([(0, 104, 71), (255, 255, 255), (206, 17, 38)]): d.rectangle([i * w / 3, 0, (i + 1) * w / 3, h], fill=c)
+        d.ellipse([w / 2 - h * 0.12, h * 0.38, w / 2 + h * 0.12, h * 0.62], fill=(140, 90, 40))
+    elif code == "AR":
+        for i, c in enumerate([(116, 172, 223), (255, 255, 255), (116, 172, 223)]): d.rectangle([0, i * h / 3, w, (i + 1) * h / 3], fill=c)
+        d.ellipse([w / 2 - h * 0.1, h * 0.4, w / 2 + h * 0.1, h * 0.6], fill=(246, 180, 14))
+    elif code == "JP":
+        d.rectangle([0, 0, w, h], fill=(255, 255, 255)); d.ellipse([w / 2 - h * 0.3, h * 0.2, w / 2 + h * 0.3, h * 0.8], fill=(188, 0, 45))
+    elif code == "NL":
+        for i, c in enumerate([(174, 28, 40), (255, 255, 255), (33, 70, 139)]): d.rectangle([0, i * h / 3, w, (i + 1) * h / 3], fill=c)
+    elif code == "FR":
+        for i, c in enumerate([(0, 35, 149), (255, 255, 255), (237, 41, 57)]): d.rectangle([i * w / 3, 0, (i + 1) * w / 3, h], fill=c)
+    elif code == "EN":
+        d.rectangle([0, 0, w, h], fill=(255, 255, 255)); d.rectangle([w / 2 - 6, 0, w / 2 + 6, h], fill=(206, 17, 36)); d.rectangle([0, h / 2 - 6, w, h / 2 + 6], fill=(206, 17, 36))
+    elif code == "CA":
+        d.rectangle([0, 0, w, h], fill=(255, 255, 255)); d.rectangle([0, 0, w / 4, h], fill=(216, 6, 33)); d.rectangle([3 * w / 4, 0, w, h], fill=(216, 6, 33))
+        d.polygon([(w / 2, h * 0.18), (w * 0.6, h * 0.55), (w / 2, h * 0.75), (w * 0.4, h * 0.55)], fill=(216, 6, 33))
     m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, w - 1, h - 1], radius=8, fill=255)
     img.paste(F, (int(x), int(y)), m)
 
@@ -64,7 +84,10 @@ def avatar(img, cx, cy, r, initials, col, a=1.0, ring=None, look=None):
     if a < 1: A.putalpha(A.getchannel("A").point(lambda v: int(v * a)))
     img.alpha_composite(A, (int(cx - S / 2), int(cy - S / 2)))
 
-def money(v, L):  # v in Mrd. USD
+CUR = {}
+def T(x, L="en"): return x[L] if isinstance(x, dict) else x
+def money(v, L):
+    if CUR.get("fmt"): return CUR["fmt"](v)
     if L == "de": return f"{v:.1f}".replace(".", ",") + " Mrd. $"
     return f"${v:.1f}B"
 
@@ -95,10 +118,10 @@ def person_card(img, y, p, lt, t0, v, rank_txt, big=False):
     avatar(img, W / 2, y + 170 + dy, 150 if big else 130, p["ini"], p["col"], a, ring=col if p.get("rank", 9) <= 3 else None, look=p.get("look"))
     layer_text(img, (W / 2, y + 360 + dy), p["name"], fName, FG, a, "ma")
     # Flagge + Kategorie
-    d = ImageDraw.Draw(img); tw = d.textlength(p["cat"][v["lang"]], font=fBody)
+    d = ImageDraw.Draw(img); tw = d.textlength(T(p["cat"], v["lang"]), font=fBody)
     x0 = W / 2 - (tw + 116) / 2
     if a > 0.5: flag(img, x0, y + 478 + dy, p["flag"])
-    layer_text(img, (x0 + 116, y + 476 + dy), p["cat"][v["lang"]], fBody, MUTED, a)
+    layer_text(img, (x0 + 116, y + 476 + dy), T(p["cat"], v["lang"]), fBody, MUTED, a)
     layer_text(img, (W / 2, y - 120 + dy), rank_txt, fD(110), col, a, "ma")
 
 def sc_rank(img, d, lt, s, v):
@@ -107,18 +130,19 @@ def sc_rank(img, d, lt, s, v):
     g = ease_io((lt - 0.45) / 1.0)
     layer_text(img, (W / 2, 960), money(p["v"] * g, L), fD(170), RANKCOL.get(p["rank"], FG), ease((lt - 0.4) / 0.2), "ma")
     # Balken relativ zur Nr. 1
-    bw = W - 2 * M; y = 1190
+    if v.get("unit"): layer_text(img, (W / 2, 1165), v["unit"], fBody, MUTED, ease((lt - 0.4) / 0.2), "ma")
+    bw = W - 2 * M; y = 1250
     ImageDraw.Draw(img).rounded_rectangle([M, y, M + bw, y + 44], radius=22, fill=PANEL)
     wbar = int(bw * p["v"] / v["vmax"] * g)
     if wbar > 10: ImageDraw.Draw(img).rounded_rectangle([M, y, M + wbar, y + 44], radius=22, fill=RANKCOL.get(p["rank"], (140, 120, 255)))
     if p.get("note"):
-        for i, ln in enumerate(wrap(d, p["note"][L], fBody, W - 2 * M)):
-            layer_text(img, (W / 2, 1290 + i * 58), ln, fBody, FG, ease((lt - 1.1) / 0.4), "ma")
+        for i, ln in enumerate(wrap(d, T(p["note"], L), fBody, W - 2 * M)):
+            layer_text(img, (W / 2, 1345 + i * 58), ln, fBody, FG, ease((lt - 1.1) / 0.4), "ma")
 
 def sc_tie(img, d, lt, s, v):
     L = v["lang"]
-    layer_text(img, (W / 2, 290), s["head"][L], fD(110), (140, 120, 255), ease(lt / 0.3), "ma")
-    layer_text(img, (W / 2, 420), s["sub"][L], fBody, MUTED, ease((lt - 0.2) / 0.3), "ma")
+    layer_text(img, (W / 2, 290), T(s["head"], L), fD(110), GOLD if s.get("top") else (140, 120, 255), ease(lt / 0.3), "ma")
+    layer_text(img, (W / 2, 420), T(s["sub"], L), fBody, MUTED, ease((lt - 0.2) / 0.3), "ma")
     for i, p in enumerate(s["ps"]):
         t0 = 0.4 + i * 0.45; a = ease((lt - t0) / 0.35)
         if a <= 0: continue
@@ -128,10 +152,10 @@ def sc_tie(img, d, lt, s, v):
         avatar(img, M + 95 + dx, y + 115, 80, p["ini"], p["col"], a, look=p.get("look"))
         layer_text(img, (M + 210 + dx, y + 42), p["name"], fD(64), FG, a)
         if a > 0.5: flag(img, M + 212 + dx, y + 140, p["flag"], 72)
-        layer_text(img, (M + 300 + dx, y + 134), p["cat"][L], fSmall, MUTED, a)
+        layer_text(img, (M + 300 + dx, y + 134), T(p["cat"], L), fSmall, MUTED, a)
     if lt > 1.9:
         k = ease((lt - 1.9) / 0.3); sc = 1 + 0.25 * (1 - k)
-        layer_text(img, (W / 2, 1400), s["each"][L] + " " + money(s["v"], L), fD(78 * sc), FG, k, "ma")
+        layer_text(img, (W / 2, 1400), T(s["each"], L) + " " + money(s["v"], L), fD(78 * sc), FG, k, "ma")
 
 def sc_reveal(img, d, lt, s, v):
     p = s["p"]; L = v["lang"]
@@ -141,7 +165,7 @@ def sc_reveal(img, d, lt, s, v):
         pulse = 1 + 0.05 * math.sin(lt * 18)
         layer_text(img, (W / 2, 250), "#1", fD(110), GOLD, 1, "ma")
         avatar(img, W / 2, 540, int(150 * pulse), "?", (90, 80, 130))
-        layer_text(img, (W / 2, 780), s["teaser"][L], fMid, MUTED, 1, "ma")
+        layer_text(img, (W / 2, 780), T(s["teaser"], L), fMid, MUTED, 1, "ma")
         return
     lt2 = lt - tr
     # Lichtstrahlen
@@ -154,12 +178,13 @@ def sc_reveal(img, d, lt, s, v):
     person_card(img, 370, p, lt2, 0.0, v, "#1", big=True)
     g = ease_io((lt2 - 0.3) / 0.9)
     layer_text(img, (W / 2, 990), money(p["v"] * g, L), fD(190), GOLD, ease((lt2 - 0.25) / 0.2), "ma")
-    for i, ln in enumerate(wrap(d, p["note"][L], fBody, W - 2 * M)):
-        layer_text(img, (W / 2, 1240 + i * 58), ln, fBody, FG, ease((lt2 - 1.0) / 0.4), "ma")
+    if v.get("unit"): layer_text(img, (W / 2, 1210), v["unit"], fBody, MUTED, ease((lt2 - 0.3) / 0.2), "ma")
+    for i, ln in enumerate(wrap(d, T(p.get("note", ""), L), fBody, W - 2 * M)):
+        layer_text(img, (W / 2, 1300 + i * 58), ln, fBody, FG, ease((lt2 - 1.0) / 0.4), "ma")
 
 def sc_board(img, d, lt, s, v):
     L = v["lang"]
-    layer_text(img, (W / 2, 250), s["head"][L], fK, GOLD, ease(lt / 0.3), "ma")
+    layer_text(img, (W / 2, 250), T(s["head"], L), fK, GOLD, ease(lt / 0.3), "ma")
     rows = sorted(v["people"], key=lambda p: -p["v"])
     for i, p in enumerate(rows):
         t0 = 0.2 + i * 0.18; g = ease_io((lt - t0) / 0.8); a = ease((lt - t0) / 0.3)
@@ -175,24 +200,25 @@ def sc_board(img, d, lt, s, v):
         if wbar > vw + 40: layer_text(img, (M + 190 + wbar - 18, y + 72), val, fLbl, BG, a, "ra")
         else: layer_text(img, (M + 200 + wbar, y + 72), val, fLbl, FG, a)
     if lt > 2.2:
-        for i, ln in enumerate(wrap(d, s["foot"][L], fBody, W - 2 * M)):
+        for i, ln in enumerate(wrap(d, T(s["foot"], L), fBody, W - 2 * M)):
             layer_text(img, (W / 2, 1460 + i * 56), ln, fBody, MUTED, ease((lt - 2.2) / 0.4), "ma")
 
 def sc_cta(img, d, lt, s, v):
     L = v["lang"]; a = ease(lt / 0.35); y = 640
-    lines = wrap(d, s["q"][L], fMid, W - 2 * M)
+    lines = wrap(d, T(s["q"], L), fMid, W - 2 * M)
     for i, ln in enumerate(lines): layer_text(img, (W / 2, y + i * 82), ln, fMid, FG, a, "ma")
     y += 82 * len(lines) + 60
-    layer_text(img, (W / 2, y), s["c"][L], fBody, MUTED, ease((lt - 0.4) / 0.4), "ma")
+    layer_text(img, (W / 2, y), T(s["c"], L), fBody, MUTED, ease((lt - 0.4) / 0.4), "ma")
     a2 = ease((lt - 0.9) / 0.4)
     P = Image.new("RGBA", img.size); bw = 640
     ImageDraw.Draw(P).rounded_rectangle([(W - bw) / 2, y + 140, (W + bw) / 2, y + 250], radius=55, fill=GOLD + (int(255 * a2),))
     img.alpha_composite(P)
-    layer_text(img, (W / 2, y + 168), s["btn"][L], fLbl, BG, a2, "ma")
+    layer_text(img, (W / 2, y + 168), T(s["btn"], L), fLbl, BG, a2, "ma")
 
 SC = {"hook": sc_hook, "rank": sc_rank, "tie": sc_tie, "reveal": sc_reveal, "board": sc_board, "cta": sc_cta}
 
 def frame(v, t):
+    CUR.clear(); CUR.update(v)
     sc = v["scenes"]; total = sum(s["dur"] for s in sc)
     img = Image.new("RGBA", (W, H), BG + (255,))
     acc = 0
@@ -206,7 +232,7 @@ def frame(v, t):
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, W, 8], fill=(34, 30, 50)); d.rectangle([0, 0, int(W * t / total), 8], fill=GOLD)
     w = d.textlength(v["brand"], font=fBrand); d.text(((W - w) / 2, 150), v["brand"], font=fBrand, fill=MUTED)
-    src = ("Quelle: " if v["lang"] == "de" else "Source: ") + v["source"][v["lang"]]
+    src = ("Quelle: " if v["lang"] == "de" else "Source: ") + T(v["source"], v["lang"])
     for i, ln in enumerate(wrap(d, src, fTiny, W - 2 * M)):
         lw = d.textlength(ln, font=fTiny); d.text(((W - lw) / 2, H - 190 + i * 36), ln, font=fTiny, fill=(112, 106, 130))
     return img.convert("RGB")
