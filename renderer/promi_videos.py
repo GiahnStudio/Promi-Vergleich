@@ -59,6 +59,29 @@ def flag(img, x, y, code, w=96):
     elif code == "CA":
         d.rectangle([0, 0, w, h], fill=(255, 255, 255)); d.rectangle([0, 0, w / 4, h], fill=(216, 6, 33)); d.rectangle([3 * w / 4, 0, w, h], fill=(216, 6, 33))
         d.polygon([(w / 2, h * 0.18), (w * 0.6, h * 0.55), (w / 2, h * 0.75), (w * 0.4, h * 0.55)], fill=(216, 6, 33))
+    elif code == "HU":
+        for i, c in enumerate([(206, 41, 57), (255, 255, 255), (71, 112, 80)]): d.rectangle([0, i * h / 3, w, (i + 1) * h / 3], fill=c)
+    elif code == "IT":
+        for i, c in enumerate([(0, 146, 70), (255, 255, 255), (206, 43, 55)]): d.rectangle([i * w / 3, 0, (i + 1) * w / 3, h], fill=c)
+    elif code == "ID":
+        d.rectangle([0, 0, w, h / 2], fill=(206, 17, 38)); d.rectangle([0, h / 2, w, h], fill=(255, 255, 255))
+    elif code == "RS":
+        for i, c in enumerate([(198, 54, 60), (12, 64, 118), (255, 255, 255)]): d.rectangle([0, i * h / 3, w, (i + 1) * h / 3], fill=c)
+        d.rounded_rectangle([w * 0.25, h * 0.2, w * 0.38, h * 0.62], radius=4, fill=(198, 54, 60), outline=(237, 185, 46), width=2)
+    elif code == "ES":
+        d.rectangle([0, 0, w, h], fill=(170, 21, 27)); d.rectangle([0, h / 4, w, 3 * h / 4], fill=(241, 191, 0))
+    elif code == "CH":
+        d.rectangle([0, 0, w, h], fill=(218, 41, 28))
+        d.rectangle([w / 2 - w * 0.06, h * 0.2, w / 2 + w * 0.06, h * 0.8], fill=(255, 255, 255))
+        d.rectangle([w / 2 - h * 0.3, h / 2 - w * 0.06, w / 2 + h * 0.3, h / 2 + w * 0.06], fill=(255, 255, 255))
+    elif code == "AU":
+        d.rectangle([0, 0, w, h], fill=(1, 33, 105))
+        cw, ch = w / 2, h / 2
+        d.line([0, 0, cw, ch], fill=(255, 255, 255), width=5); d.line([0, ch, cw, 0], fill=(255, 255, 255), width=5)
+        d.rectangle([cw / 2 - 4, 0, cw / 2 + 4, ch], fill=(255, 255, 255)); d.rectangle([0, ch / 2 - 4, cw, ch / 2 + 4], fill=(255, 255, 255))
+        d.rectangle([cw / 2 - 2, 0, cw / 2 + 2, ch], fill=(200, 16, 46)); d.rectangle([0, ch / 2 - 2, cw, ch / 2 + 2], fill=(200, 16, 46))
+        for sx, sy, r in [(w * 0.25, h * 0.75, 7), (w * 0.75, h * 0.25, 4), (w * 0.85, h * 0.5, 4), (w * 0.7, h * 0.6, 4), (w * 0.75, h * 0.85, 4)]:
+            d.ellipse([sx - r, sy - r, sx + r, sy + r], fill=(255, 255, 255))
     m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, w - 1, h - 1], radius=8, fill=255)
     img.paste(F, (int(x), int(y)), m)
 
