@@ -11,7 +11,7 @@ Gepostet wird über Metricool, Marke **"Who has more?"**, blogId `7714006`, Zeit
 5. Rendern: `python3 renderer/episodes.py <slugs…>`, einige Frames als Bild prüfen (Überlappungen, Textlänge).
 6. Commit + Push auf `main`. Video-URL: `https://raw.githubusercontent.com/GiahnStudio/Promi-Vergleich/main/videos/<slug>.mp4`
 7. In Metricool je ein TikTok-Post pro Tag um 20:00 Europe/Madrid einplanen – ab dem ersten Tag ohne bereits geplanten Post, 7 Tage am Stück (Tage mit vorhandenem Post überspringen, nie zwei Posts am selben Tag) (privacyOption PUBLIC_TO_EVERYONE, title = `title`, text = `caption`, kein videoThumbnailUrl – privates Konto).
-8. Vorher prüfen, ob frühere Posts mit Status ERROR existieren (getScheduledPosts); dann Fehler melden statt weiter einzuplanen.
+8. Vorher prüfen, ob frühere **Who-has-more-Posts** (Text enthält `#whohasmore`, erstellt ab 2026-10-29 21:30) mit Status ERROR existieren (getScheduledPosts); dann Fehler melden statt weiter einzuplanen. Alte Facts-Germany-Posts (deutsch, ohne #whohasmore, Entwürfe oder ERROR vom 29.10.) ignorieren und nie anfassen.
 9. Themen in `TOPICS.md` eintragen, pushen, kurze Zusammenfassung an GIAHN senden.
 
 ## Regeln
