@@ -18,6 +18,14 @@
 | 13 | 13_box_office_stars | Biggest box office stars (The Numbers, alle Rollen) | erstellt 2026-11-01, NICHT eingeplant (Reserve) |
 | 14 | 14_big3_grand_slam_race | RACE: Federer vs Nadal vs Djokovic, Grand Slams 2003–2026 | 2026-11-04 |
 
+## Ideen nach Marktanalyse (bevorzugen)
+- Ronaldo vs DU: wie schnell er dein Jahresgehalt verdient (Forbes 2026 + BLS/Eurostat-Median)
+- Taylor Swift Eras Tour vs. Lebensverdienst eines Durchschnittsmenschen
+- MrBeast-Views vs. Einwohnerzahlen von Ländern
+- Stadionbier / Konzertticket-Preise früher vs heute (Nostalgie + Empörung)
+- Athletengehalt vs. Lehrer/Ärzte-Lebensverdienst (offizielle Lohnstatistik)
+- Kinder-Stars von damals vs heute (Followers/Vermögen, nur belegbare Zahlen)
+
 ## Race-Ideen
 - Ronaldo vs Messi: Karriere-Tore pro Jahr
 - Hamilton vs Schumacher vs Verstappen: GP-Siege

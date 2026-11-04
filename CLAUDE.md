@@ -6,6 +6,18 @@ TikTok-Account **@who.has.more1** (Englisch). Promi-Vergleiche, Comic-Avatare st
 - **Race (Hauptformat, 5 von 7 Videos/Woche):** `renderer/races.py` + `renderer/race.py`. Duell von 2–3 Promis über die Zeit (Linien mit Comic-Köpfen, Überholmanöver, Callouts). Vorbild: `14_big3_grand_slam_race`.
 - **Ranking (Nebenformat, 2 von 7):** `renderer/episodes.py` (Countdown-Rangliste).
 
+### Themen-Strategie (Marktanalyse 4.11.2026 – WICHTIGER als das Format)
+Diagnose: Reichweite ist normal für neue Accounts (250–900 Views ≈ Median 394 bei <1.000 Followern), aber Engagement ~0,2 % statt Median 4,6 %. Reine Rekord-/Trivia-Listen („Wer hat die meisten Oscars“) lösen keine Reaktion aus – die Antwort kennt man, niemand muss kommentieren.
+Was bei viralen Daten-Accounts funktioniert (z. B. Yung Geeski, 7–12 Mio. Views: Pelosi vs Buffett, Real Cost of Takeout, Inflation vs Groceries, Charizard vs Stock Market):
+1. **Bezug zum Zuschauer** (Geld, Alltag, Arbeit): „Promi vs DU“. Bsp.: „Ronaldo earns your yearly salary before lunch“, „How long would YOU need to work to earn Taylor Swift's tour money?“
+2. **Unerwartete Paarung**: Promi vs etwas völlig anderes (Land, Firma, Alltagsprodukt, Durchschnittsmensch). Bsp.: „MrBeast vs a whole country's TV audience“, „Kim Kardashian vs a doctor's lifetime earnings“.
+3. **Gefühl bestätigen / Unfairness / Staunen** (Empörung und Humor teilen sich am meisten): absurde Gehälter, absurde Preise, „Is this fair?“.
+4. **Debatte mit zwei Lagern**: GOAT-Fragen (Messi vs Ronaldo, LeBron vs Jordan, Swift vs Beyoncé) – Fans verteidigen ihren Favoriten in den Kommentaren.
+5. **Nostalgie**: Kindheits-Stars/-Marken früher vs heute.
+Pro Woche mind. 3 Themen aus Typ 1–3, max. 2 reine GOAT-Duelle, keine reinen Rekord-Trivia mehr. Headline und `end_q` müssen eine Meinung provozieren („Is this fair?“, „Who's the real GOAT?“, „Would you trade places?“).
+Caption: 41–80 Zeichen Text + max. 4–5 Hashtags (mehr schadet eher). Videos ≤ 20 s.
+Vergleichszahlen für „Promi vs DU“ nur aus offiziellen Statistiken (z. B. US BLS, OECD, Eurostat) mit Jahr in der Quelle.
+
 ### Gute Race-Themen
 - Bekannte Rivalitäten mit Führungswechseln: Ronaldo vs Messi (Tore, Titel), Swift vs Drake (Hot-100-Hits), Hamilton vs Verstappen (Siege), LeBron vs Jordan (Punkte), Promi-Follower über die Jahre …
 - Überraschende Gegenüberstellungen, die Kommentare auslösen.
@@ -22,7 +34,7 @@ Gepostet wird über Metricool, Marke **"Who has more?"**, blogId `7714006`, Zeit
 1. Repo klonen (Schreibzugriff), `TOPICS.md` lesen: Bereits gepostete Themen nicht wiederholen.
 2. 7 neue Themen wählen (Mix: Geld, Sport, Musik, Film, Social Media, Rekorde, Kurioses). Bevorzugt aktuelle Anlässe (Award gerade vergeben, neue Forbes-Liste …).
 3. Jede Zahl per Websuche aus einer aktuellen, seriösen Quelle prüfen (Forbes, Guinness, offizielle Award-Datenbanken, Wikipedia-Listen mit Datum). Keine Themen mit unsicheren/umstrittenen Zahlen. Jede `note`/`foot`/Caption-Aussage nachrechnen.
-4. 5 Race-Episoden in `renderer/races.py` und 2 Ranking-Episoden in `renderer/episodes.py` anlegen (Struktur wie bestehende: 5–6 Personen, `look` mit Erkennungsmerkmalen, `fmt`, `unit`, `source`, `title`, `caption` mit Quelle + Hashtags inkl. #whohasmore). Fortlaufende Nummern im `slug`.
+4. 5 Race-Episoden in `renderer/races.py` und 2 Ranking-Episoden in `renderer/episodes.py` anlegen (Struktur wie bestehende: 5–6 Personen, `look` mit Erkennungsmerkmalen, `fmt`, `unit`, `source`, `title`, `caption` mit Quelle + 4–5 Hashtags inkl. #whohasmore). Fortlaufende Nummern im `slug`.
 5. Rendern: `python3 renderer/races.py <slugs…>` bzw. `python3 renderer/episodes.py <slugs…>`, einige Frames als Bild prüfen (Überlappungen, Textlänge).
 6. Commit + Push auf `main`. Video-URL: `https://raw.githubusercontent.com/GiahnStudio/Promi-Vergleich/main/videos/<slug>.mp4`
 7. Reihenfolge abwechseln (nie 2 Rankings hintereinander). In Metricool je ein TikTok-Post pro Tag um 20:00 Europe/Madrid einplanen – ab dem ersten Tag ohne bereits geplanten Post, 7 Tage am Stück (Tage mit vorhandenem Post überspringen, nie zwei Posts am selben Tag) (privacyOption PUBLIC_TO_EVERYONE, title = `title`, text = `caption`, kein videoThumbnailUrl – privates Konto).
